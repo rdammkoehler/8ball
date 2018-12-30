@@ -18,7 +18,6 @@ WHEEL_FILE="8ball-${VERSION}-py3-none-any.whl"
 
 # activate the python virtual environment
 source venv/bin/activate
-pip install --index-url http://localhost:8081/repository/mypypi-all/simple --trusted-host localhost --no-cache-dir wheel
 pip install --index-url http://localhost:8081/repository/mypypi-all/simple --trusted-host localhost --no-cache-dir -r requirements.txt
 
 # Create the wheel file to upload to nexus pypi
@@ -36,3 +35,4 @@ docker push localhost:18000/$NAME:$VERSION
 docker push localhost:18000/$NAME:latest
 
 cd ${DIR}
+
