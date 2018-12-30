@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+# figure out what directory this script is in
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do
   DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
@@ -8,18 +8,23 @@ while [ -h "$SOURCE" ]; do
 done
 export DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
+# move to the parent directory of this script
 cd ${DIR}/..
 
 NAME=8ball
 VERSION=$(cat setup.py | grep "^VERSION" | awk '{ print $3}' | tr \' ' ')
 VERSION="${VERSION//[[:space:]]/}"
 WHEEL_FILE="8ball-${VERSION}-py3-none-any.whl"
+
+# activate the python virtual environment
 source venv/bin/activate
+pip install --index-url http://localhost:8081/repository/mypypi-all/simple --trusted-host localhost --no-cache-dir wheel
+pip install --index-url http://localhost:8081/repository/mypypi-all/simple --trusted-host localhost --no-cache-dir -r requirements.txt
 
 # Create the wheel file to upload to nexus pypi
 rm -f dist/$WHEEL_FILE
 ./setup.py bdist_wheel
-twine upload --repository-url http://localhost:8081/repository/mypypi-local/ dist/$WHEEL_FILE
+twine upload --repository-url http://localhost:8081/repository/mypypi-hosted/ dist/$WHEEL_FILE
 
 # build the docker image using nexus pypi
 nexus_server_docker_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' nexus`
