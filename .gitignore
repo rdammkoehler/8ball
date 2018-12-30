@@ -1,0 +1,15 @@
+venv/*
+*.pyc
+__pycache__
+*.swp
+.idea
+build/
+dist/
+*.egg-info
+.cache
+cover/
+.coverage
+.pytest_cache
+*.pem
+*.crt
+*.csr
